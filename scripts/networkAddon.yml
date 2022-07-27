@@ -1,0 +1,39 @@
+type: update
+name: Multiregional Postgres Network Add-on
+targetNodes: none
+
+onInstall:
+  - setGlobals:
+      mainAppId: ${settings.mainAppId}
+  - installAddon:
+      id: network-postgres-multiregional-cluster
+      nodeGroup: sqldb
+      
+addons:
+  - id: network-postgres-multiregional-cluster
+    name: Internal Network Add-on
+    onBeforeDelete:
+      callScript:
+        action: DeleteEnv
+    onAfterClone:
+      - script: delete MANIFEST.id; return {result:0, jps:MANIFEST};
+      - install: ${response.jps}
+        envName: ${event.response.env.envName}
+    onAfterCloneNodes:
+      forEach(node:event.response.array):
+        callScript:
+          action: AddNode
+          nodeId: ${@node.id}
+    onInstall:
+      callScript:
+        action: CreateEnv
+    actions:
+      callScript:
+        - script: |-
+            appId = '${this.appid:0}'
+            if(appId == 0) appId = '${env.appid}';
+            hostGroup = '${this.hostGroup:0}'
+            if(hostGroup == 0) hostGroup = '${env.hostGroup.uniqueName}';
+            var params = { envAppid: appId, action: "${this.action}", nodeId:"${this.nodeId:0}", hostGroup: hostGroup }, 
+                resp = jelastic.dev.scripting.Eval("${globals.mainAppId}", session, "vpn.VPNController", params);
+            return resp.response ? resp.response:resp;
