@@ -4,10 +4,10 @@ name: Multi-Region Postgres Cluster
 id: postgres-cluster-multiregions
 categories:
   - apps/clusters
-logo: /images/postgres-multi-region.png
+logo: /images/postgres-multiregion-logo.png
 description: 
-  text: Highly-available and reliable Postgres cluster setup with automatic multi-region distribution.
-  short: Enterprise-grade Postgres Cluster with automatic distribution across several regions.
+  text: Highly-available and reliable Postgres cluster setup with automatic multi-region distribution
+  short: Enterprise-grade Postgres Cluster with automatic distribution across several regions
 baseUrl: https://raw.githubusercontent.com/DmytroZubelevych/postgres-multiregion/master
 
 onBeforeInit: scripts/onBeforeInit.js
