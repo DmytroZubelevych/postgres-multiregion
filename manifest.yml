@@ -147,7 +147,7 @@ onInstall:
   - initGlobals
   - setGlobals:
       domain: ${settings.envName}-1.${globals.domain-1}
-  - createEnvs
+  - createEnvs:
     - script: ${baseUrl}/scripts/getClusterEnvs.js
       envName: ${settings.envName}-1
     - setGlobals:
