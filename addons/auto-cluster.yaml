@@ -10,7 +10,6 @@ targetNodes:
 
 onInstall:
   - script: scripts/getEnvNodes.js
-  - setNodeDisplayName[sqldb]: Primary
   - init
   - script: |-
       var regions = '${settings.regions}'.split(','), onAfterReturn = { setGlobals: {} }, glbs = onAfterReturn.setGlobals, pgsqlIPs = [];
@@ -42,7 +41,6 @@ actions:
 #              if (resp.result != 0) return resp;
 #              return { result:0 }
     - else:
-      - setNodeDisplayName[${nodes.sqldb.master.id}]: Primary
       - getPswd
       - forEach(globals.pgsqlEnvs):
           - if ('${@i}' != '${env.envName}'): 
