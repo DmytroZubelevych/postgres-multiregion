@@ -6,6 +6,7 @@ id: vpn_network
 
 globals:
   mainAppid: ${settings.vpnAppid}
+
 description:
   text: Assign private IP address from KTBCS internal service networks to any container depending on the selected region where the container was deployed. In case of multiple containers in a layer, each of them will receive the IP address.
   short: Service network IP assignment add-on
