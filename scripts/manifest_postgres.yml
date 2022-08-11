@@ -5,6 +5,9 @@ name: PostgreSQL Node
 
 baseUrl: https://raw.githubusercontent.com/DmytroZubelevych/postgres-multiregion/master
 
+globals:
+  vpnAppid: ${settings.vpnAppid}
+
 nodes:
   cloudlets: 32
   scalingMode: STATELESS
