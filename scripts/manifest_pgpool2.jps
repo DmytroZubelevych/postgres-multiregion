@@ -5,6 +5,9 @@ name: Pgpool II Node
 
 baseUrl: https://raw.githubusercontent.com/DmytroZubelevych/postgres-multiregion/master
 
+globals:
+  vpnAppid: ${settings.vpnAppid}
+
 nodes:
   cloudlets: 8
   scalingMode: STATELESS
@@ -54,3 +57,8 @@ onInstall:
       pg_md5 --md5auth --username=webadmin ${settings.password}
       chown -R postgres:postgres /etc/pgpool-II
     user: root
+  - if (!/vpnAppid/.test("${globals.vpnAppid}")):
+    - install: ${baseUrl}/scripts/networkAddon.yml
+      nodeGroup: sqldb
+      settings:
+        vpnAppid: ${globals.vpnAppid}
