@@ -37,13 +37,8 @@ onAfterResetNodePassword[sqldb]:
 onInstall:
   - cmd[${nodes.sqldb.master.id}]: |-
       jem passwd set -p ${settings.password}
-      retries=60
-      while [ $retries -gt 0 ]; do
-          sleep 1
-          [ -n "$(netstat -nlpt 2>/dev/null | grep postmaster)" ] && break
-          let retries=${retries}-1
-      done
     user: root
+  - waitForPostgresUp
   - setGlobals:
       regions: ${settings.regions}
       mainEnvName: ${settings.mainEnvName}
@@ -59,6 +54,15 @@ onBeforeDelete:
   - deleteEnvFromMultiregionalCluster
 
 actions:
+  waitForPostgresUp:
+    - cmd[${nodes.sqldb.master.id}]: |-
+        retries=60
+        while [ $retries -gt 0 ]; do
+            sleep 1
+            [ -n "$(netstat -nlpt 2>/dev/null | grep postmaster)" ] && break
+            let retries=${retries}-1
+        done
+    user: root
   setPasswordAcrossRegions:
     - cmd[${nodes.sqldb.master.id}]: jcm getPswd
     - setGlobals:
