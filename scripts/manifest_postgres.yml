@@ -35,6 +35,10 @@ onAfterResetNodePassword[sqldb]:
   - setPasswordAcrossRegions
 
 onInstall:
+  - if ('${settings.nodeType}' == 'postgres14'):
+      - cmd[${nodes.sqldb.master.id}]: |-
+          sed -i 's|#password_encryption.*|password_encryption = md5|' /var/lib/pgsql/data/postgresql.conf
+  - waitForPostgresUp
   - cmd[${nodes.sqldb.master.id}]: |-
       jem passwd set -p ${settings.password}
     user: root
