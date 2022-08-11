@@ -48,6 +48,11 @@ onInstall:
       mainEnvName: ${settings.mainEnvName}
   - cmd[${nodes.sqldb.master.id}]: |-
       psql -U webadmin -d postgres -c "CREATE USER pgpool REPLICATION LOGIN CONNECTION LIMIT -1 ENCRYPTED PASSWORD '${settings.password}';"
+  - if (!/vpnAppid/.test("${globals.vpnAppid}")):
+    - install: ${baseUrl}/scripts/networkAddon.yml
+      nodeGroup: sqldb
+      settings:
+        vpnAppid: ${globals.vpnAppid}
 #  - install: ${baseUrl}/scripts/cloningAddon.yml
 #    settings:
 #      regions: ${settings.regions}
