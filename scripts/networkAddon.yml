@@ -64,7 +64,7 @@ actions:
         hostGroup = '${this.hostGroup:0}'
         if(hostGroup == 0) hostGroup = '${env.hostGroup.uniqueName}';
         var params = { envAppid: appId, action: "${this.action}", nodeId:"${this.nodeId:0}", hostGroup: hostGroup },
-            resp = jelastic.dev.scripting.Eval("${globals.mainAppId}", session, "vpn.VPNController", params);
+            resp = jelastic.dev.scripting.Eval("${settings.vpnAppid}", session, "vpn.VPNController", params);
         return resp.response ? resp.response:resp;
 
 logo: https://raw.githubusercontent.com/jelastic/icons/master/vpn_network/service-net-ip-logo.png
