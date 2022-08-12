@@ -60,6 +60,6 @@ onInstall:
   - if ('${settings.internalNetworkEnabled}' == 'true' ):
     - if (!/vpnAppid/.test("${globals.vpnAppid}")):
       - install: ${baseUrl}/scripts/networkAddon.yml
-        nodeGroup: sqldb
+        nodeGroup: extra
         settings:
           vpnAppid: ${globals.vpnAppid}
