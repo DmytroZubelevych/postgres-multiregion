@@ -5,5 +5,5 @@ Entry point details:
 **Standby**: ${globals.regionName-2} ${globals.extIP-2}   
 
 Database credentials:   
-**User**: webadmin 
+**User**: webadmin    
 **Password**: ${globals.password}  
