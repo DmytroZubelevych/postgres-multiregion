@@ -57,8 +57,9 @@ onInstall:
       pg_md5 --md5auth --username=webadmin ${settings.password}
       chown -R postgres:postgres /etc/pgpool-II
     user: root
-  - if (!/vpnAppid/.test("${globals.vpnAppid}")):
-    - install: ${baseUrl}/scripts/networkAddon.yml
-      nodeGroup: extra
-      settings:
-        vpnAppid: ${globals.vpnAppid}
+  - if ('${settings.internalNetworkEnabled}' == 'true' ):
+    - if (!/vpnAppid/.test("${globals.vpnAppid}")):
+      - install: ${baseUrl}/scripts/networkAddon.yml
+        nodeGroup: sqldb
+        settings:
+          vpnAppid: ${globals.vpnAppid}
