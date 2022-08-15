@@ -213,9 +213,6 @@ onInstall:
     - createPgpool2Envs
     - setGlobals:
         pgpool2Regions: ${settings.pgpool2Regions}
-  - else:
-    - setGlobals:
-        pgpool2Regions: ""
   - script: ${baseUrl}/scripts/getClusterEnvs.js
     envName: ${settings.envName}-pgpool2-1
   - setGlobals:
