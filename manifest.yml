@@ -14,6 +14,7 @@ onBeforeInit: scripts/onBeforeInit.js
 
 globals: 
   password: ${fn.password(10)}
+  pgpool2Regions: ""
 
 settings:
   main:
@@ -208,7 +209,7 @@ onInstall:
     envName: ${settings.envName}-1
   - setGlobals:
       DBEnvs: ${response.items.join(,)} 
-  - if ('${settings.pgpoolEnabled}' == 'true' ):
+  - if (${settings.pgpoolEnabled:false}):
     - createPgpool2Envs
     - setGlobals:
         pgpool2Regions: ${settings.pgpool2Regions}
