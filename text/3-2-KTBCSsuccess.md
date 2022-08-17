@@ -3,8 +3,8 @@ Multi-Region PostgreSQL Database cluster **${settings.envName}** successfully in
 Entry point details:    
 **Primary**: ${globals.regionName-1} ${globals.extIP-1}   
 **Standby 1**: ${globals.regionName-2} ${globals.extIP-2}   
-**Standby 2**: ${globals.regionName-3} ${globals.extIP-3}  
-**Pgpool-II First node**: ${globals.pgpoolRegionName-1} ${globals.pgpoolExtIP-1}
+**Standby 2**: ${globals.regionName-3} ${globals.extIP-3}    
+**Pgpool-II First node**: ${globals.pgpoolRegionName-1} ${globals.pgpoolExtIP-1}    
 **Pgpool-II Second node**: ${globals.pgpoolRegionName-2} ${globals.pgpoolExtIP-2}   
 
 Database credentials:   
