@@ -49,17 +49,6 @@ actions:
                 id: ${response.secondaryNodeId}
                 ip: ${response.secondaryNodeIp}
                 domain: ${@i}
-    - forEach(globals.pgsqlEnvs):
-        - if ('${@i}' != '${env.envName}'):
-          - script: |-
-              var resp = jelastic.marketplace.jps.Install({
-                  envName: '${@i}',
-                  session: session,
-                  jps: '${baseUrl}/scripts/manifest_secondary.yml',
-                  nodeGroup: 'sqldb'
-              });
-              if (resp.result != 0) return resp;
-              return { result:0 }
               
   initSecondary:
     - cmd[${nodes.sqldb.master.id}]: |-
