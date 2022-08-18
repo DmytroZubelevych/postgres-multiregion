@@ -49,7 +49,10 @@ actions:
                 id: ${response.secondaryNodeId}
                 ip: ${response.secondaryNodeIp}
                 domain: ${@i}
-              
+            - script: |-
+                resp = jelastic.env.control.ExecCmdByGroup('${@i}', session, 'sqldb', toJSON([{ "command": "jem service restart", "params": "" }]), false, false, "root");
+                return resp;
+
   initSecondary:
     - forEach(globals.pgsqlEnvs):
         - script: |-
