@@ -53,7 +53,7 @@ actions:
   initSecondary:
     - forEach(globals.pgsqlEnvs):
         - script: |-
-            resp = jelastic.env.control.ExecCmdByGroup('${@i}', session, 'sqldb', toJSON([{ "command": "jcm addReplicaHost", "params": "${this.ip}" }]), false, "root");
+            resp = jelastic.env.control.ExecCmdByGroup('${@i}', session, 'sqldb', toJSON([{ "command": "jcm addReplicaHost", "params": "${this.ip}" }]), false, false, "root");
             return resp;
     - cmd[${nodes.sqldb.master.id}]: |-
         sudo jem service restart
