@@ -54,6 +54,8 @@ actions:
     - forEach(globals.pgsqlEnvs):
         - script: |-
             resp = jelastic.env.control.ExecCmdByGroup('${@i}', session, 'sqldb', toJSON([{ "command": "jcm addReplicaHost", "params": "${this.ip}" }]), false, false, "root");
+            if (resp.result != 0) return resp;
+            resp = jelastic.env.control.ExecCmdByGroup('${@i}', session, 'sqldb', toJSON([{ "command": "jcm addReplicaHost", "params": "${nodes.sqldb.master.address}" }]), false, false, "root");
             return resp;
     - cmd[${nodes.sqldb.master.id}]: |-
         sudo jem service restart
