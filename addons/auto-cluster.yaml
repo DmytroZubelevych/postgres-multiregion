@@ -30,7 +30,7 @@ actions:
       - getPswd
       - forEach(globals.pgsqlEnvs):
           - if ('${@i}' != '${env.envName}'):
-            - script: ${baseUrl}/scripts/gupdateConfigAfterClone.js
+            - script: ${baseUrl}/scripts/updateConfigAfterClone.js
       - forEach(globals.pgsqlEnvs):
           - script: |-
               var resp = jelastic.marketplace.jps.Install({
