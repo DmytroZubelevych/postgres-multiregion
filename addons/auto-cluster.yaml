@@ -44,11 +44,18 @@ actions:
       - getPswd
       - forEach(globals.pgsqlEnvs):
           - script: ${baseUrl}/scripts/getSecondaryNodeParam.js
+          - setGlobals:
+              currentPgIp: ${response.secondaryNodeIp}
+              currentPgId: ${response.secondaryNodeId}
           - if ('${@i}' != '${env.envName}'): 
             - initSecondary: 
-                id: ${response.secondaryNodeId}
-                ip: ${response.secondaryNodeIp}
+                id: ${globals.currentPgId}
+                ip: ${globals.currentPgIp}
                 domain: ${@i}
+          - forEach(pgenv:globals.pgsqlEnvs):
+            - script: |-
+                resp = jelastic.env.control.ExecCmdByGroup('${@pgenv}', session, 'sqldb', toJSON([{ "command": "jcm addReplicaHost", "params": "${globals.currentPgIp}" }]), false, false, "root");
+                return resp;
               
   initSecondary:
     - cmd[${nodes.sqldb.master.id}]: |-
