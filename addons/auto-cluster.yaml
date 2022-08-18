@@ -46,8 +46,9 @@ actions:
           - script: ${baseUrl}/scripts/getSecondaryNodeParam.js
           - forEach(pgenv:globals.pgsqlEnvs):
             - script: |-
-                resp = jelastic.env.control.ExecCmdByGroup('${@pgenv}', session, 'sqldb', toJSON([{ "command": "jcm addReplicaHost", "params": "${this.ip}" }]), false, false, "root");
+                resp = jelastic.env.control.ExecCmdByGroup('${@pgenv}', session, 'sqldb', toJSON([{ "command": "jcm addReplicaHost", "params": "${response.secondaryNodeIp}" }]), false, false, "root");
                 return resp;
+          - script: ${baseUrl}/scripts/getSecondaryNodeParam.js
           - if ('${@i}' != '${env.envName}'): 
             - initSecondary: 
                 id: ${response.secondaryNodeId}
