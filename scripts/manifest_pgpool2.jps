@@ -9,7 +9,7 @@ globals:
   vpnAppid: ${settings.vpnAppid}
 
 nodes:
-  cloudlets: 8
+  cloudlets: 16
   scalingMode: STATELESS
   nodeType: pgpool2
   nodeGroup: extra
