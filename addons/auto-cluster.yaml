@@ -52,18 +52,33 @@ actions:
             - script: |-
                 resp = jelastic.env.control.ExecCmdByGroup('${@i}', session, 'sqldb', toJSON([{ "command": "jem service restart", "params": "" }]), false, false, "root");
                 return resp;
+      - forEach(globals.pgsqlEnvs):
+          - if ('${@i}' != '${env.envName}'): 
+            - script: ${baseUrl}/scripts/getSecondaryNodeParam.js
+            - addSlavesToHbaConf: 
+                ip: ${response.secondaryNodeIp}
 
   initSecondary:
-    - forEach(globals.pgsqlEnvs):
-        - script: |-
-            resp = jelastic.env.control.ExecCmdByGroup('${@i}', session, 'sqldb', toJSON([{ "command": "jcm addReplicaHost", "params": "${this.ip}" }]), false, false, "root");
-            return resp;
+    - cmd[${nodes.sqldb.master.id}]: |-
+        jcm addReplicaHost ${this.ip} &>> /var/log/run.log
+        sudo jem service restart
     - cmd[${nodes.sqldb.master.id}]: |-
         sudo jem service restart
     - script: |-
         initSecondaryCmd = "jcm initSecondary &>> /var/log/run.log; jcm updateHbaConf ${globals.pgsqlAddresses} ${this.ip}; chown -R postgres:postgres /var/lib/pgsql/data; jem service restart";
         resp = jelastic.env.control.ExecCmdById('${this.domain}', session, ${this.id}, toJSON([{ "command": initSecondaryCmd, "params": "" }]), false, "root");
         return resp;
+        
+  addSlavesToHbaConf:
+    - script: |-
+        var regions = '${settings.regions}'.split(','),
+            pg_hba_string = "1i host replication  replication       ${this.ip}/32    trust",
+            pg_hba_comand = 'grep -q ${this.ip} /var/lib/pgsql/data/pg_hba.conf || sed -ci -e \'' + pg_hba_string + '\' /var/lib/pgsql/data/pg_hba.conf';
+        for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
+            resp = jelastic.env.control.ExecCmdByGroup('${settings.mainEnvName}-' + cluster, session, 'sqldb', toJSON([{ "command": pg_hba_comand, "params": "" }]), false, false, "root");
+            if (resp.result != 0) return resp;
+        }
+        return { result: 0 };
 
   addPgNodesToPool:
     - forEach(globals.pgAddrsses):
