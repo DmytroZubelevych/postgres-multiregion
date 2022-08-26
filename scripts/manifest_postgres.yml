@@ -41,6 +41,8 @@ onInstall:
   - if ('${settings.nodeType}' == 'postgres14'):
       - cmd[${nodes.sqldb.master.id}]: |-
           sed -ci -e 's|#password_encryption.*|password_encryption = md5|' /var/lib/pgsql/data/postgresql.conf
+  - cmd[${nodes.sqldb.master.id}]: |-
+      grep -q "^wal_log_hints" /var/lib/pgsql/data/postgresql.conf || echo 'wal_log_hints = on' >> /var/lib/pgsql/data/postgresql.conf; jem service restart
   - waitForPostgresUp
   - cmd[${nodes.sqldb.master.id}]: |-
       jem passwd set -p ${settings.password}
