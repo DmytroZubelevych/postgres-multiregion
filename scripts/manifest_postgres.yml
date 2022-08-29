@@ -40,11 +40,12 @@ onAfterResetNodePassword[sqldb]:
 
 onInstall:
   - if ('${settings.nodeType}' == 'postgres14'):
-      - cmd[${nodes.sqldb.master.id}]: |-
+      - cmd[sqldb]: |-
           sed -ci -e 's|#password_encryption.*|password_encryption = md5|' ${globals.postgresqlConf}
           echo 'wal_keep_size = 1024' >> ${globals.postgresqlConf}
   - else:
-      echo 'wal_keep_segments = 128' >> ${globals.postgresqlConf}
+      - cmd[sqldb]: |-
+          echo 'wal_keep_segments = 128' >> ${globals.postgresqlConf}
   - cmd[${nodes.sqldb.master.id}]: |-
       grep -q "^wal_log_hints" ${globals.postgresqlConf} || echo 'wal_log_hints = on' >> ${globals.postgresqlConf}; jem service restart
   - waitForPostgresUp
