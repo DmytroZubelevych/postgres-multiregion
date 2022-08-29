@@ -7,6 +7,7 @@ baseUrl: https://raw.githubusercontent.com/DmytroZubelevych/postgres-multiregion
 
 globals:
   vpnAppid: ${settings.vpnAppid}
+  postgresqlConf: '/var/lib/pgsql/data/postgresql.conf'
 
 nodes:
   cloudlets: 32
@@ -40,9 +41,12 @@ onAfterResetNodePassword[sqldb]:
 onInstall:
   - if ('${settings.nodeType}' == 'postgres14'):
       - cmd[${nodes.sqldb.master.id}]: |-
-          sed -ci -e 's|#password_encryption.*|password_encryption = md5|' /var/lib/pgsql/data/postgresql.conf
+          sed -ci -e 's|#password_encryption.*|password_encryption = md5|' ${globals.postgresqlConf}
+          echo 'wal_keep_size = 1024' >> ${globals.postgresqlConf}
+  - else:
+      echo 'wal_keep_segments = 128' >> ${globals.postgresqlConf}
   - cmd[${nodes.sqldb.master.id}]: |-
-      grep -q "^wal_log_hints" /var/lib/pgsql/data/postgresql.conf || echo 'wal_log_hints = on' >> /var/lib/pgsql/data/postgresql.conf; jem service restart
+      grep -q "^wal_log_hints" ${globals.postgresqlConf} || echo 'wal_log_hints = on' >> ${globals.postgresqlConf}; jem service restart
   - waitForPostgresUp
   - cmd[${nodes.sqldb.master.id}]: |-
       jem passwd set -p ${settings.password}
