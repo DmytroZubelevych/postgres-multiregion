@@ -40,6 +40,7 @@ settings:
         dependsOn: region
         randomName: true
         showFullDomain: false
+        tooltip: Maximum length of environment name is 16 symbols
         required: true
       - type: checkbox
         caption: "Create separate environment group"
