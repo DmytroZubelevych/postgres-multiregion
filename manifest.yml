@@ -208,8 +208,14 @@ onInstall:
       }
       return { result: 0 }
   - installClusterLogic
+  - if (${settings.pgpoolEnabled:false}):
+    - setGlobals:
+        successPath: /text/success-pgpool.md?_r=${fn.random}
+  - else:
+    - setGlobals:
+        successPath: /text/success.md?_r=${fn.random}
 
 startPage: ${nodes.sqldb.master.url}
 success:
-  email: /text/success.md?_r=${fn.random}
-  text: /text/success.md?_r=${fn.random}
+  email: ${globals.successPath}
+  text: ${globals.successPath}
