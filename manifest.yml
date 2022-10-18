@@ -172,6 +172,20 @@ onInstall:
           }
       }
       return { result: 0, onAfterReturn: onAfterReturn };
+  - if (${settings.pgpoolEnabled:false}):
+      - script: |-
+          var onAfterReturn = { setGlobals: {} }, glbs = onAfterReturn.setGlobals;
+          var resp = jelastic.env.control.GetEnvInfo('${settings.envName}-pgpool2-1', session);
+          if (resp.result != 0) { return resp; }
+          for (var i = 0, k = resp.nodes; i < k.length; i++) {
+              if (k[i].nodeGroup == 'extra') {
+                  if( k[i].ismaster ) {
+                      glbs["master_id_pgpool-1"] = k[i].id;
+                      glbs["master_address_pgpool-1"] = k[i].address;
+                  }
+              }
+          }
+          return { result: 0, onAfterReturn: onAfterReturn };
   - script: |-
       var regions = '${settings.regions}'.split(','), currentEnvName,
           replaceCmd = "sed -ci -e 's|MASTER_IP|PG_MASTER_IP|g' /usr/local/sbin/jcm"
