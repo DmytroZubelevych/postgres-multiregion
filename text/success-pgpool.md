@@ -2,10 +2,10 @@ Multi-Region PostgreSQL Database cluster **${settings.envName}** successfully in
 
 Entry point details:
 Use this for accessing the web admin panel of PostgreSQL master node
-**Admin Panel**: [https://node${globals.master_id_sqldb-1}-${globals.pgpoolDomain}/](https://node${globals.master_id_sqldb-1}-${globals.domain}/)
+**Admin Panel**: [https://node${globals.master_id_sqldb-1}-${globals.domain}/](https://node${globals.master_id_sqldb-1}-${globals.domain}/)
 
 Use this for connection by PGPool-II (leader) node:    
-**Admin Panel**: [https://node${globals.master_id_pgpool-1}-${globals.pgpoolDomain}:5432/](https://node${globals.master_id_pgpool-1}-${globals.domain}:5432/)    
+**Admin Panel**: [https://node${globals.master_id_pgpool-1}-${globals.pgpoolDomain}:5432/](https://node${globals.master_id_pgpool-1}-${globals.pgpoolDomain}:5432/)    
 
 Database credentials:    
 **User**: webadmin    
