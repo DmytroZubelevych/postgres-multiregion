@@ -186,6 +186,8 @@ onInstall:
               }
           }
           return { result: 0, onAfterReturn: onAfterReturn };
+      - setGlobals:
+          pgpoolDomain: ${settings.envName}-pgpool2-1.${globals.domain-1}
   - script: |-
       var regions = '${settings.regions}'.split(','), currentEnvName,
           replaceCmd = "sed -ci -e 's|MASTER_IP|PG_MASTER_IP|g' /usr/local/sbin/jcm"
