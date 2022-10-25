@@ -31,15 +31,15 @@ actions:
       - forEach(globals.pgsqlEnvs):
           - if ('${@i}' != '${env.envName}'):
             - script: ${baseUrl}/scripts/updateConfigAfterClone.js
-      #- forEach(globals.pgsqlEnvs):
-      #    - script: |-
-      #        var resp = jelastic.marketplace.jps.Install({
-      #            envName: '${@i}',
-      #            session: session,
-      #            jps: '${baseUrl}/scripts/cloningAddon.yml'
-      #        });
-      #        if (resp.result != 0) return resp;
-      #        return { result:0 }
+      - forEach(globals.pgsqlEnvs):
+          - script: |-
+              var resp = jelastic.marketplace.jps.Install({
+                  envName: '${@i}',
+                  session: session,
+                  jps: '${baseUrl}/scripts/cloningAddon.yml'
+              });
+              if (resp.result != 0) return resp;
+              return { result:0 }
     - else:
       - getPswd
       - forEach(globals.pgsqlEnvs):
