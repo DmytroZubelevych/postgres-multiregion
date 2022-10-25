@@ -39,7 +39,7 @@ addons:
                     if (resp.result != 0) return resp;
                 }
             }
-            var regions = '${globals.pgpool2Regions}'.split(',');
+            regions = '${globals.pgpool2Regions}'.split(',');
             for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
                 var resp = jelastic.env.control.GetEnvInfo('${globals.mainEnvName}-pgpool2-' + cluster, session);
                 if (resp.result == 0) {
