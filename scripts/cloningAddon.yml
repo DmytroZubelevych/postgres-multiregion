@@ -35,7 +35,7 @@ addons:
             for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
                 var resp = jelastic.env.control.GetEnvInfo('${globals.mainEnvName}-' + cluster, session);
                 if (resp.result == 0) {
-                    var resp = jelastic.env.control.CloneEnv('${globals.mainEnvName}-' + cluster, session, '${globals.mainEnvName}-clone-' + cluster);
+                    var resp = jelastic.env.control.CloneEnv('${globals.mainEnvName}-' + cluster, session, '${globals.mainEnvName}-cln-' + cluster);
                     if (resp.result != 0) return resp;
                 }
             }
@@ -43,7 +43,7 @@ addons:
             for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
                 var resp = jelastic.env.control.GetEnvInfo('${globals.mainEnvName}-pgpool2-' + cluster, session);
                 if (resp.result == 0) {
-                    var resp = jelastic.env.control.CloneEnv('${globals.mainEnvName}-pgpool2-' + cluster, session, '${globals.mainEnvName}-clone-pgpool2-' + cluster);
+                    var resp = jelastic.env.control.CloneEnv('${globals.mainEnvName}-pgpool2-' + cluster, session, '${globals.mainEnvName}-cln-pgpool2-' + cluster);
                     if (resp.result != 0) return resp;
                 }
             }
