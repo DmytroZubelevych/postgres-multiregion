@@ -67,11 +67,6 @@ onInstall:
         nodeGroup: sqldb
         settings:
           vpnAppid: ${globals.vpnAppid}
-  - install: ${baseUrl}/scripts/cloningAddon.yml
-    settings:
-      regions: ${settings.regions}
-      pgpool2Regions: ${settings.pgpool2Regions}
-      mainEnvName: ${settings.mainEnvName}
 
 onBeforeDelete:
   - deleteEnvFromMultiregionalCluster

@@ -31,15 +31,6 @@ actions:
       - forEach(globals.pgsqlEnvs):
           - if ('${@i}' != '${env.envName}'):
             - script: ${baseUrl}/scripts/updateConfigAfterClone.js
-      - forEach(globals.pgsqlEnvs):
-          - script: |-
-              var resp = jelastic.marketplace.jps.Install({
-                  envName: '${@i}',
-                  session: session,
-                  jps: '${baseUrl}/scripts/cloningAddon.yml'
-              });
-              if (resp.result != 0) return resp;
-              return { result:0 }
     - else:
       - getPswd
       - forEach(globals.pgsqlEnvs):
@@ -57,6 +48,13 @@ actions:
             - script: ${baseUrl}/scripts/getSecondaryNodeParam.js
             - addSlavesToHbaConf: 
                 ip: ${response.secondaryNodeIp}
+      - install: ${baseUrl}/scripts/cloningAddon.yml
+        envName: ${settings.mainEnvName}
+        settings:
+          nodeGroup: sqldb
+          regions: "${settings.regions}"
+          pgpool2Regions: "${settings.pgpool2Regions}"
+          mainEnvName: "${settings.mainEnvName}"
 
   initSecondary:
     - cmd[${nodes.sqldb.master.id}]: |-
