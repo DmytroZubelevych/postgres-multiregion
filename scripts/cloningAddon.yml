@@ -49,10 +49,10 @@ addons:
             }
             return { result: 0 };
         - install: ${baseUrl}/addons/auto-cluster.yaml
-          envName: ${globals.mainEnvName}-clone-1
+          envName: ${globals.mainEnvName}-cln-1
           settings:
             nodeGroup: sqldb
             clone: true
             regions: "${globals.regions}"
             pgpool2Regions: "${globals.pgpool2Regions}"
-            mainEnvName: "${globals.mainEnvName}-clone"
+            mainEnvName: "${globals.mainEnvName}-cln"
