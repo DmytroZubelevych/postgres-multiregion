@@ -49,7 +49,7 @@ actions:
             - addSlavesToHbaConf: 
                 ip: ${response.secondaryNodeIp}
       - install: ${baseUrl}/scripts/cloningAddon.yml
-        envName: '{settings.mainEnvName}-1'
+        envName: '${settings.mainEnvName}-1'
         settings:
           nodeGroup: sqldb
           regions: "${settings.regions}"
