@@ -26,6 +26,17 @@ onInstall:
 actions:
   init:
     - if (${settings.clone:false} || ${this.update:false}):
+      - script: |-
+          var regions = '${settings.pgpool2Regions}'.split(','), cleanCmd;
+          for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
+              var resp = jelastic.env.control.GetEnvInfo('${settings.mainEnvName}-pgpool2-' + cluster, session);
+              if (resp.result == 0) {
+                  cleanCmd = "jcm cleanupNodesFromPgpool2Conf &>> /var/log/run.log";
+                  var resp = jelastic.env.control.ExecCmdByGroup('${settings.mainEnvName}-pgpool2-' + cluster, session, 'extra', toJSON([{ "command": cleanCmd, "params": "" }]), false, false, "postgres");
+                  if (resp.result != 0) return resp;
+              }
+          }
+          return { result: 0 };
       - cmd[${nodes.sqldb.master.id}]: jcm removeAllReplicaHosts
       - getPswd
       - forEach(globals.pgsqlEnvs):
