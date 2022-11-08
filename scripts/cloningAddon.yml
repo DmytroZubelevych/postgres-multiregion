@@ -29,14 +29,13 @@ addons:
         caption: Clone cluster
         successText: "Multiregional Postgres cluster is successfully cloned"
     actions:
-      setNewEnvName:
+      cloneCluster:
         - script: |-
             var newMainEnvName = '${globals.mainEnvName}'.slice(0, '${globals.mainEnvName}'.length - 3) + '-cl', 
                 onAfterReturn = { setGlobals: {} },
                 glbs = onAfterReturn.setGlobals;
             glbs["newMainEnvName"] = newMainEnvName;
             return { result: 0, onAfterReturn: onAfterReturn };
-      cloneCluster:
         - script: |-
             var regions = '${globals.regions}'.split(',');
             for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
