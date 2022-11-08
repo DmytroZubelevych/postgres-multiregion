@@ -31,11 +31,16 @@ addons:
     actions:
       cloneCluster:
         - script: |-
+            var newMainEnvName = '${globals.mainEnvName}'.slice(0, '${globals.mainEnvName}'.length - 3) + '-cl', 
+                onAfterReturn = { setGlobals: {} },
+                glbs = onAfterReturn.setGlobals;
+            return { result: 0, onAfterReturn: onAfterReturn };
+        - script: |-
             var regions = '${globals.regions}'.split(',');
             for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
                 var resp = jelastic.env.control.GetEnvInfo('${globals.mainEnvName}-' + cluster, session);
                 if (resp.result == 0) {
-                    var resp = jelastic.env.control.CloneEnv('${globals.mainEnvName}-' + cluster, session, '${globals.mainEnvName}-cln-' + cluster);
+                    var resp = jelastic.env.control.CloneEnv('${globals.mainEnvName}-' + cluster, session, '${globals.newMainEnvName}-' + cluster);
                     if (resp.result != 0) return resp;
                 }
             }
@@ -43,16 +48,16 @@ addons:
             for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
                 var resp = jelastic.env.control.GetEnvInfo('${globals.mainEnvName}-pgpool2-' + cluster, session);
                 if (resp.result == 0) {
-                    var resp = jelastic.env.control.CloneEnv('${globals.mainEnvName}-pgpool2-' + cluster, session, '${globals.mainEnvName}-cln-pgpool2-' + cluster);
+                    var resp = jelastic.env.control.CloneEnv('${globals.mainEnvName}-pgpool2-' + cluster, session, '${globals.newMainEnvName}-pgpool2-' + cluster);
                     if (resp.result != 0) return resp;
                 }
             }
             return { result: 0 };
         - install: ${baseUrl}/addons/auto-cluster.yaml
-          envName: ${globals.mainEnvName}-cln-1
+          envName: ${globals.newMainEnvName}-1
           settings:
             nodeGroup: sqldb
             clone: true
             regions: "${globals.regions}"
             pgpool2Regions: "${globals.pgpool2Regions}"
-            mainEnvName: "${globals.mainEnvName}-cln"
+            mainEnvName: "${globals.newMainEnvName}"
