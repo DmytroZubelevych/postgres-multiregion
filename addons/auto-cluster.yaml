@@ -66,6 +66,7 @@ actions:
           regions: "${settings.regions}"
           pgpool2Regions: "${settings.pgpool2Regions}"
           mainEnvName: "${settings.mainEnvName}"
+    - fixConnInfo
 
   initSecondary:
     - cmd[${nodes.sqldb.master.id}]: |-
