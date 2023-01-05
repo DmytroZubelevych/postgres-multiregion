@@ -98,9 +98,9 @@ actions:
             if (resp.result != 0) return resp;
         }
         var serverNumber = cluster - 1;
-        var adjustConinfoCmd = 'sed -ci -e "s/port=5432 user=replication'/port=5432 user=replication application_name=server' + serverNumber + '/g" /var/lib/pgsql/data/postgresql.conf';
+        var adjustConinfoCmd = "sed -ci -e 's/port=5432 user=replication\'/port=5432 user=replication application_name=server" + serverNumber + "\'/g' /var/lib/pgsql/data/postgresql.conf";
         var resp = jelastic.env.control.ExecCmdByGroup('${settings.mainEnvName}-' + cluster, session, 'sqldb', toJSON([{ "command": adjustConinfoCmd, "params": "" }]), false, false, "postgres");
-        return { result: 0};
+        return { result: 0 };
 
   addPgNodesToPool:
     - forEach(globals.pgAddrsses):
