@@ -52,7 +52,7 @@ var resp = jelastic.environment.control.GetEnvs(appid, session);
 
 if (resp.result != 0) return resp;
 
-var data = getList('${globals.newMainEnvName}', resp.infos);
+var data = getList('${globals.newMainEnvName}-1', resp.infos);
 
 return { 
     result: 0,
