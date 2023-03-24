@@ -10,6 +10,7 @@ onInstall:
       regions: ${settings.regions}
       pgpool2Regions: ${settings.pgpool2Regions}
       mainEnvName: ${settings.mainEnvName}
+      multiregional_utils: https://github.com/jelastic-jps/common/blob/main/multiregional-cluster-utils
   - installAddon:
       id: clone-postgres-multiregional-cluster
       nodeGroup: sqldb
@@ -36,7 +37,8 @@ addons:
                 glbs = onAfterReturn.setGlobals;
             glbs["newMainEnvName"] = newMainEnvName;
             return { result: 0, onAfterReturn: onAfterReturn };
-        - script: scripts/getClusterEnvs.js
+        - script: ${globals.multiregional_utils}/get-cluster-envs.js
+          envName: ${globals.newMainEnvName}-1
         - if ('${response.items.length}' != '0'):
             - stopEvent:
                 type: warning
