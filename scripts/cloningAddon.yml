@@ -36,6 +36,11 @@ addons:
                 glbs = onAfterReturn.setGlobals;
             glbs["newMainEnvName"] = newMainEnvName;
             return { result: 0, onAfterReturn: onAfterReturn };
+        - script: scripts/getClusterEnvs.js
+        - if ( ${response.items.length} != 0 )
+            - stopEvent:
+                type: warning
+                message: Clone of ${globals.mainEnvName} multiregional cluster already exists.
         - script: |-
             var regions = '${globals.regions}'.split(',');
             for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
