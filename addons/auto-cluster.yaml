@@ -38,6 +38,7 @@ actions:
                   "PG_MASTER_IP": '${nodes.sqldb.master.address}'
                 }
               });
+          }
           if (resp.result != 0) return resp;
       - script: |-
           var regions = '${settings.pgpool2Regions}'.split(','), cleanCmd;
