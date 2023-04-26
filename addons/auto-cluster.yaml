@@ -35,7 +35,7 @@ actions:
                 session: session,
                 nodeGroup: "sqldb",
                 vars: {
-                  "PG_MASTER_IP": '${nodes.sqldb.master.ip}'
+                  "PG_MASTER_IP": '${nodes.sqldb.master.address}'
                 }
               });
           if (resp.result != 0) return resp;
