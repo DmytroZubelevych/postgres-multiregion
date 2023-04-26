@@ -39,7 +39,7 @@ actions:
                 }
               });
           }
-          if (resp.result != 0) return resp;
+          return { result: 0 };
       - script: |-
           var regions = '${settings.pgpool2Regions}'.split(','), cleanCmd;
           for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
