@@ -50,7 +50,7 @@ actions:
               deletePgPoolPublicKeys = "sed -ci -e '/pgpool2/d' /var/lib/pgsql/.ssh/authorized_keys",
               getPgPooolPublicKey = "cat /var/lib/pgsql/.ssh/id_rsa.pub",
               ipCmd = "ip a | grep -A1 venet0 | grep inet | awk '{print $2}'| sed 's|\/[0-9]*||g' | head -n 2|tail -n 1";
-              resp = jelastic.env.control.ExecCmdByGroup('${settings.mainEnvName}-' + 1, session, 'sqldb', toJSON([{ "command": ipCmd, "params": "" }]), false, false, "root");
+              var resp = jelastic.env.control.ExecCmdByGroup('${settings.mainEnvName}-' + 1, session, 'sqldb', toJSON([{ "command": ipCmd, "params": "" }]), false, false, "root");
               if (resp.result != 0) { return resp; } else { postgresMasterIp = resp.responses[0].out; }
           for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
               resp = jelastic.env.control.GetEnvInfo('${settings.mainEnvName}-' + cluster, session);
@@ -78,6 +78,8 @@ actions:
                           if (resp.result != 0) return resp;
                       }
                   }
+                  resp = jelastic.env.control.ExecCmdByGroup('${settings.mainEnvName}-' + cluster, session, 'sqldb', toJSON([{ "command": "jem service restart", "params": "" }]), false, false, "root");
+                  if (resp.result != 0) return resp;
               }
           }
           return { result: 0 };        
