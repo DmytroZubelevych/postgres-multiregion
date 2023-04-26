@@ -133,10 +133,6 @@ actions:
         
   fixConnInfo:
     - script: |-
-        var postgresMasterIp, ipCmd = "ip a | grep -A1 venet0 | grep inet | awk '{print $2}'| sed 's|\/[0-9]*||g' | head -n 2|tail -n 1";
-        var resp = jelastic.env.control.ExecCmdByGroup('${env.envName}', session, 'sqldb', toJSON([{ "command": ipCmd, "params": "" }]), false, false, "root");
-        if (resp.result != 0) { return resp; } else { postgresMasterIp = resp.responses[0].out; }
-        var fixMasterCommand = "sed -ci -e 's/host=[0-9.]*/host=" + postgresMasterIp + "/' /var/lib/pgsql/data/postgresql.conf";
         var regions = '${settings.regions}'.split(',');
         for (var cluster = 2, n = regions.length + 1; cluster < n; cluster++) {
             var resp = jelastic.env.control.GetEnvInfo('${settings.mainEnvName}-' + cluster, session);
@@ -146,11 +142,6 @@ actions:
             resp = jelastic.env.control.ExecCmdByGroup('${settings.mainEnvName}-' + cluster, session, 'sqldb', toJSON([{
                 "command": adjustConinfoCmd,
                 "params": ""
-            }]), false, false, "postgres");
-            if (resp.result != 0) return resp; 
-            resp = jelastic.env.control.ExecCmdByGroup('${settings.mainEnvName}-' + cluster, session, 'sqldb', toJSON([{ 
-                "command": fixMasterCommand, 
-                "params": "" 
             }]), false, false, "postgres");
             if (resp.result != 0) return resp;
         }
