@@ -79,7 +79,7 @@ settings:
 
 mixins:
   - https://github.com/jelastic-jps/common/blob/main/multiregional-cluster-utils/multiregion-globals-common.yml
-  - https://github.com/jelastic-jps/common/blob/main/multiregional-cluster-utils/multiregion-db-common.yml
+  - https://gist.githubusercontent.com/DmytroZubelevych/96b45b967f1e9b7c97fd9f522d835f50/raw/0bd5eb6d3115b40cf06afa2ecc5044bb65f6809f/gistfile1.txt
 
 actions:
   createPgpool2Envs:
