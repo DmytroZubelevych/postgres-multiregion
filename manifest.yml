@@ -79,7 +79,7 @@ settings:
 
 mixins:
   - https://github.com/jelastic-jps/common/blob/main/multiregional-cluster-utils/multiregion-globals-common.yml
-  - https://gist.githubusercontent.com/DmytroZubelevych/96b45b967f1e9b7c97fd9f522d835f50/raw/eda5483d0b8ef22335e87ca250c6cb5263c1cfc7/gistfile1.yml
+  - https://gist.githubusercontent.com/DmytroZubelevych/96b45b967f1e9b7c97fd9f522d835f50/raw/e05fe1aa861214df26bdfbf41b5919d81f7232e2/gistfile1.yml
 
 actions:
   createPgpool2Envs:
@@ -93,7 +93,7 @@ actions:
           loggerName: "${settings.envName}-pgpool2-" + cluster,
           envGroups: envGroups,
           displayName: "Pgpool-II node " + cluster ,
-          region: "${globals.pgpoolRegion-" + cluster + "}",
+          region: regions[cluster-1],
           settings: {
             nodeType: "pgpool2",
             password: "${globals.password}",
@@ -120,7 +120,7 @@ actions:
         targetEnvGroups.push(postgresEnvGroup);
         var DBEnvs = '${globals.DBEnvs}'.split(',');
         for (var i = 0, n = DBEnvs.length; i < n; i ++) {
-            resp = jelastic.env.control.AttachEnvGroup({
+            resp = api.env.control.AttachEnvGroup({
               envName  : DBEnvs[i],
               session  : session,
               envGroups: targetEnvGroups
@@ -130,7 +130,7 @@ actions:
         if ('${settings.pgpoolEnabled}' == 'true' ) {
             var Pgpool2Envs = '${globals.Pgpool2Envs}'.split(',');
             for (var i = 0, n = Pgpool2Envs.length; i < n; i ++) {
-                resp = jelastic.env.control.AttachEnvGroup({
+                resp = api.env.control.AttachEnvGroup({
                   envName  : Pgpool2Envs[i],
                   session  : session,
                   envGroups: targetEnvGroups
@@ -161,7 +161,7 @@ onInstall:
     - attachNodeGroups
   - script: |-
       var onAfterReturn = { setGlobals: {} }, pgsqlEnvs = [], glbs = onAfterReturn.setGlobals;
-      var resp = jelastic.env.control.GetEnvInfo('${settings.envName}-1', session);
+      var resp = api.env.control.GetEnvInfo('${settings.envName}-1', session);
       var ipCmd = "ip a | grep -A1 venet0 | grep inet | awk '{print $2}'| sed 's|\/[0-9]*||g' | head -n 2|tail -n 1";
       if (resp.result != 0) { return resp; } else { pgsqlEnvs.push(resp.env.shortdomain); }
       for (var i = 0, k = resp.nodes; i < k.length; i++) {
@@ -176,7 +176,7 @@ onInstall:
   - if (${settings.pgpoolEnabled:false}):
       - script: |-
           var onAfterReturn = { setGlobals: {} }, glbs = onAfterReturn.setGlobals;
-          var resp = jelastic.env.control.GetEnvInfo('${settings.envName}-pgpool2-1', session);
+          var resp = api.env.control.GetEnvInfo('${settings.envName}-pgpool2-1', session);
           if (resp.result != 0) { return resp; }
           for (var i = 0, k = resp.nodes; i < k.length; i++) {
               if (k[i].nodeGroup == 'extra') {
@@ -194,7 +194,7 @@ onInstall:
           replaceCmd = "sed -ci -e 's|MASTER_IP|PG_MASTER_IP|g' /usr/local/sbin/jcm"
       for (var cluster = 1, n = regions.length + 1; cluster < n; cluster ++) {
           currentEnvName = '${settings.envName}-' + cluster;
-          resp = jelastic.env.control.AddContainerEnvVars({
+          resp = api.env.control.AddContainerEnvVars({
             envName: currentEnvName,
             session: session,
             nodeGroup: "sqldb",
@@ -203,7 +203,7 @@ onInstall:
             }
           });
          if (resp.result != 0) { return resp; }
-         resp = jelastic.env.control.ExecCmdByGroup(currentEnvName, session, "sqldb", toJSON([{
+         resp = api.env.control.ExecCmdByGroup(currentEnvName, session, "sqldb", toJSON([{
             "command": replaceCmd,
             "params": ""
          }]), false, false, "root");

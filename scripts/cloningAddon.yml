@@ -46,17 +46,17 @@ addons:
         - script: |-
             var regions = '${globals.regions}'.split(',');
             for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
-                var resp = jelastic.env.control.GetEnvInfo('${globals.mainEnvName}-' + cluster, session);
+                var resp = api.env.control.GetEnvInfo('${globals.mainEnvName}-' + cluster, session);
                 if (resp.result == 0) {
-                    var resp = jelastic.env.control.CloneEnv('${globals.mainEnvName}-' + cluster, session, '${globals.newMainEnvName}-' + cluster);
+                    var resp = api.env.control.CloneEnv('${globals.mainEnvName}-' + cluster, session, '${globals.newMainEnvName}-' + cluster);
                     if (resp.result != 0) return resp;
                 }
             }
             regions = '${globals.pgpool2Regions}'.split(',');
             for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
-                var resp = jelastic.env.control.GetEnvInfo('${globals.mainEnvName}-pgpool2-' + cluster, session);
+                var resp = api.env.control.GetEnvInfo('${globals.mainEnvName}-pgpool2-' + cluster, session);
                 if (resp.result == 0) {
-                    var resp = jelastic.env.control.CloneEnv('${globals.mainEnvName}-pgpool2-' + cluster, session, '${globals.newMainEnvName}-pgpool2-' + cluster);
+                    var resp = api.env.control.CloneEnv('${globals.mainEnvName}-pgpool2-' + cluster, session, '${globals.newMainEnvName}-pgpool2-' + cluster);
                     if (resp.result != 0) return resp;
                 }
             }

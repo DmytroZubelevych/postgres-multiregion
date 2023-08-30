@@ -48,7 +48,7 @@ function getList(envName, items) {
     };
 }
 
-var resp = jelastic.environment.control.GetEnvs(appid, session);
+var resp = api.environment.control.GetEnvs(appid, session);
 
 if (resp.result != 0) return resp;
 

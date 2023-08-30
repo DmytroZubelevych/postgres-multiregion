@@ -3,7 +3,7 @@ var settings = jps.settings.main, markup = "",
     SAME_NODES = "environment.maxsamenodescount",
     MAX_NODES = "environment.maxnodescount";
 
-var regions = jelastic.env.control.GetRegions(appid, session);
+var regions = api.env.control.GetRegions(appid, session);
 if (regions.result != 0) return regions;
 
 var min = 2, name, value,
@@ -20,10 +20,10 @@ if (hasCollaboration) {
     ];
     group = { groupType: '${account.groupType}' };
 } else {
-    quotas.push(jelastic.billing.account.GetQuotas(MAX_COUNT).array[0]);
-    quotas.push(jelastic.billing.account.GetQuotas(SAME_NODES).array[0]);
-    quotas.push(jelastic.billing.account.GetQuotas(MAX_NODES).array[0]);
-    group = jelastic.billing.account.GetAccount(appid, session);
+    quotas.push(api.billing.account.GetQuotas(MAX_COUNT).array[0]);
+    quotas.push(api.billing.account.GetQuotas(SAME_NODES).array[0]);
+    quotas.push(api.billing.account.GetQuotas(MAX_NODES).array[0]);
+    group = api.billing.account.GetAccount(appid, session);
 }
 
 for (var i = 0, n = quotas.length; i < n; i++) {

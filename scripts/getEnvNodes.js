@@ -6,7 +6,7 @@ var regions = '${settings.regions}'.split(','),
     pgsqlIPs = [];
     pgsqlEnvs = [];
 for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
-    var resp = jelastic.env.control.GetEnvInfo('${settings.mainEnvName}-' + cluster, session);
+    var resp = api.env.control.GetEnvInfo('${settings.mainEnvName}-' + cluster, session);
     if (resp.result != 0) {
         return resp;
     } else {

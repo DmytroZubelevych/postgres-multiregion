@@ -1,5 +1,5 @@
 var secondaryNodeId, secondaryNodeIp;
-var resp = jelastic.env.control.GetEnvInfo('${@i}', session);
+var resp = api.env.control.GetEnvInfo('${@i}', session);
 if (resp.result != 0) {
     return resp;
 }

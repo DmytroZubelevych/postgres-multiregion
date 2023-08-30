@@ -88,15 +88,15 @@ actions:
         - if ('${@i}' != '${env.envName}'):
           - script: |-
               var passwdCmd = "jem passwd set -p ${globals.password}",
-              resp = jelastic.env.control.ExecCmdByGroup('${@i}', session, "sqldb", toJSON([{ "command": passwdCmd, "params": "" }]), false, false, "root");
+              resp = api.env.control.ExecCmdByGroup('${@i}', session, "sqldb", toJSON([{ "command": passwdCmd, "params": "" }]), false, false, "root");
               return resp;
     - script: |-
         var regions = '${settings.pgpool2Regions}'.split(','), passwdCmd;
         for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
-            var resp = jelastic.env.control.GetEnvInfo('${settings.mainEnvName}-pgpool2-' + cluster, session);
+            var resp = api.env.control.GetEnvInfo('${settings.mainEnvName}-pgpool2-' + cluster, session);
             if (resp.result == 0) {
                 passwdCmd = "pg_enc -m -f /etc/pgpool-II/pgpool.conf -u webadmin ${globals.password}";
-                var resp = jelastic.env.control.ExecCmdByGroup('${settings.mainEnvName}-pgpool2-' + cluster, session, 'extra', toJSON([{ "command": passwdCmd, "params": "" }]), false, false, "postgres");
+                var resp = api.env.control.ExecCmdByGroup('${settings.mainEnvName}-pgpool2-' + cluster, session, 'extra', toJSON([{ "command": passwdCmd, "params": "" }]), false, false, "postgres");
                 if (resp.result != 0) return resp;
             }
         }
@@ -112,7 +112,7 @@ actions:
             pgsqlIPs = [];
         for (var cluster = 1, n = regions.length + 1; cluster < n; cluster++) {
             if ('${settings.mainEnvName}-' + cluster != 'env.envName') {
-                var resp = jelastic.env.control.GetEnvInfo('${settings.mainEnvName}-' + cluster, session);
+                var resp = api.env.control.GetEnvInfo('${settings.mainEnvName}-' + cluster, session);
                 if (resp.result == 0) { 
                     for (var i = 0, k = resp.nodes; i < k.length; i++) { pgsqlIPs.push(k[i].address); }
                 }
@@ -123,13 +123,13 @@ actions:
     - forEach(globals.pgsqlEnvs):
         - if (${@i} != ${env.envName}):
           - script: |-
-              var resp = jelastic.env.control.GetEnvInfo('${@i}' + cluster, session);
+              var resp = api.env.control.GetEnvInfo('${@i}' + cluster, session);
               if (resp.result == 0) {
                   var thisNodeIp, ipCmd = "ip a | grep -A1 venet0 | grep inet | awk '{print $2}'| sed 's|\/[0-9]*||g' | head -n 2|tail -n 1";
-                  resp = jelastic.env.control.ExecCmdByGroup('${@i}', session, "sqldb", toJSON([{ "command": ipCmd, "params": "" }]), false, false, "root");
+                  resp = api.env.control.ExecCmdByGroup('${@i}', session, "sqldb", toJSON([{ "command": ipCmd, "params": "" }]), false, false, "root");
                   if (resp.result != 0) { return resp; } else { thisNodeIp = resp.responses[0].out; }
                   var removeEnvCmd = "jcm updateHbaConf ${globals.nodes_address} ";
-                  resp = jelastic.env.control.ExecCmdByGroup('${@i}', session, "sqldb", toJSON([{ "command": removeEnvCmd, "params": thisNodeIp }]), false, false, "root");
+                  resp = api.env.control.ExecCmdByGroup('${@i}', session, "sqldb", toJSON([{ "command": removeEnvCmd, "params": thisNodeIp }]), false, false, "root");
                   return resp;
               }
               return { result: 0 }
