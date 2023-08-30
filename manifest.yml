@@ -189,12 +189,8 @@ onInstall:
                   }
               }
           }
+          glbs["pgpoolDomain"] = resp.env.domain
           return { result: 0, onAfterReturn: onAfterReturn };
-      - script: |-
-          var resp = jelastic.env.control.GetEnvInfo("${settings.envName}-pgpool2-1", session);
-          if (resp.result != 0) { return resp; } else { return { result: 0, domain: resp.env.domain };}
-      - setGlobals:
-          pgpoolDomain: ${response.domain}
   - script: |-
       var regions = '${settings.regions}'.split(','), currentEnvName,
           replaceCmd = "sed -ci -e 's|MASTER_IP|PG_MASTER_IP|g' /usr/local/sbin/jcm"
