@@ -91,7 +91,12 @@ actions:
                   if (resp.result != 0) return resp;
               }
           }
-          return { result: 0 };        
+          return { result: 0 };
+      - forEach(globals.pgsqlEnvs):
+          - if ('${@i}' != '${env.envName}'):
+            - script: ${baseUrl}/scripts/getSecondaryNodeParam.js
+            - addSlavesToHbaConf:
+                ip: ${response.secondaryNodeIp}
     - else:
       - getPswd
       - forEach(globals.pgsqlEnvs):
